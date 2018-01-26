@@ -1,4 +1,5 @@
 from flask import Flask, render_template, jsonify, request, redirect, session
+from flask import Markup
 import json
 from textwrap import dedent
 from uuid import uuid4
@@ -13,12 +14,33 @@ app = Flask(__name__)
 
 # MySQL configurations
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'dlxorud7202'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'kk2924140'
 app.config['MYSQL_DATABASE_DB'] = 'accountBook'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
 
 app.secret_key = '???'
+
+# chart.js x axis of graph
+labels = [
+    'JAN', 'FEB', 'MAR', 'APR',
+    'MAY', 'JUN', 'JUL', 'AUG',
+    'SEP', 'OCT', 'NOV', 'DEC'
+]
+
+# chart.js sample values of graph
+values = [
+    967.67, 1190.89, 1079.75, 1349.19,
+    2328.91, 2504.28, 2873.83, 4764.87,
+    4349.29, 6458.30, 9907, 16297
+]
+
+# chart.js colors of graph
+colors = [
+    "#F7464A", "#46BFBD", "#FDB45C", "#FEDCBA",
+    "#ABCDEF", "#DDDDDD", "#ABCABC", "#4169E1",
+    "#C71585", "#FF4500", "#FEDCBA", "#46BFBD"
+]
 
 # 홈화면
 @app.route('/')
@@ -189,7 +211,9 @@ def joinIn():
 def stat():
     try:
         if session.get('user'):
-            return render_template('stat.html',userName=session.get('name'))
+            bar_labels = labels
+            bar_values = values
+            return render_template('stat.html',userName=session.get('name'), max=17000, labels = bar_labels, values = bar_values)
         else:
             return render_template('error.html', error="장부통계를 볼 권한이 없습니다. 로그인 해주세요")
     except Exception as e:
